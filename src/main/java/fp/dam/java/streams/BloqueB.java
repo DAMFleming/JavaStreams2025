@@ -2,17 +2,22 @@ package fp.dam.java.streams;
 
 import static java.util.stream.Collectors.averagingInt;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.OptionalLong;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
 public class BloqueB {
 	
 	private static Pattern pattern = Pattern.compile("\\p{L}+|\\P{L}+");
+	private static Pattern pattern2 = Pattern.compile("\\p{L}+");
 	
 	/*
 	 * EJERCICIO 1
@@ -26,9 +31,17 @@ public class BloqueB {
 	 */
 	
 	static List<List<String>> ejercicio01(Stream<String> secuencia) {
+//		return secuencia
+//				.map(s -> pattern.matcher(s).results().map(r -> r.group()).toList())
+//				.toList();
+		
 		return secuencia
-				.map(s -> pattern.matcher(s).results().map(r -> r.group()).toList())
-				.toList();
+				.map(s -> pattern
+						.matcher(s)
+						.results()
+						.map(r -> r.group())
+						.collect(Collectors.toCollection(ArrayList::new)))
+				.collect(Collectors.toCollection(LinkedList::new));
 	}
 	
 	/*
@@ -91,7 +104,14 @@ public class BloqueB {
 	 */
 	
 	static Set<String> ejercicio06(Stream<String> secuencia) {
-		return null;
+		return secuencia
+				.flatMap(s -> pattern2.matcher(s).results().map(r -> r.group()))
+				.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+				.entrySet()
+				.stream()
+				.filter(e -> e.getValue() > 1)
+				.map(e -> e.getKey())
+				.collect(Collectors.toSet());
 	}
 	
 	
