@@ -50,8 +50,11 @@ public class BloqueB {
 	 * creado en el ejercicio 1.
 	 */
 	
-	static long ejercicio03(List<List<String>> lista) {
-		return 0;
+	static OptionalLong ejercicio03(List<List<String>> lista) {
+		return lista
+				.stream()
+				.mapToLong(l -> l.size())
+				.max();
 	}
 	
 	
